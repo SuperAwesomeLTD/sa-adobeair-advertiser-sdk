@@ -36,6 +36,9 @@ package tv.superawesome {
 				throw new Error( "SuperAwesome native extension is not supported on this platform." );
 			}
 			
+			// add callback
+			extContext.addEventListener(StatusEvent.STATUS, nativeCallback);
+			
 			// instrance 
 			_instance = this;
 		}
