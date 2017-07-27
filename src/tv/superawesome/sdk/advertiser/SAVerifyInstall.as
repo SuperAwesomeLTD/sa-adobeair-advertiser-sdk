@@ -1,43 +1,35 @@
 // ActionScript file
 
-package tv.superawesome {
+package tv.superawesome.sdk.advertiser {
 	
 	import com.adobe.serialization.json.JSON;
 	
 	import flash.events.StatusEvent;
-	import flash.external.ExtensionContext;
+	import tv.superawesome.sdk.advertiser.SAExtensionContext;
 	
-	public class SuperAwesomeAdvertiser {
-		
-		// the extension context
-		private var extContext: ExtensionContext; 
+	public class SAVerifyInstall {
 		
 		// define a default callback so that it's never null and I don't have
 		// to do a check every time I want to call it
 		private var installCallback: Function = function(success: Boolean): void{};
 	
 		// instance vars
-		private static var name: String = "SuperAwesomeAdvertiser";
+		private static var name: String = "SAVerifyInstall";
 		
 		// singleton variable
-		private static var _instance: SuperAwesomeAdvertiser;
-		public static function getInstance(): SuperAwesomeAdvertiser {
-			if (!_instance) { _instance = new SuperAwesomeAdvertiser(); }
+		private static var _instance: SAVerifyInstall;
+		public static function getInstance(): SAVerifyInstall {
+			if (!_instance) { _instance = new SAVerifyInstall(); }
 			return _instance;
 		}
 		
-		public function SuperAwesomeAdvertiser () {
+		public function SAVerifyInstall () {
 			if (_instance) {
 				throw new Error("Singleton... use getInstance()");
 			}
 			
-			extContext = ExtensionContext.createExtensionContext("tv.superawesomeadvertiser.plugins.air", "" );
-			if ( !extContext ) {
-				throw new Error( "SuperAwesome native extension is not supported on this platform." );
-			}
-			
 			// add callback
-			extContext.addEventListener(StatusEvent.STATUS, nativeCallback);
+			SAExtensionContext.current().context().addEventListener(StatusEvent.STATUS, nativeCallback);
 			
 			// instrance 
 			_instance = this;
@@ -48,7 +40,7 @@ package tv.superawesome {
 			installCallback = callback != null ? callback : installCallback;
 			
 			// call create
-			extContext.call("SuperAwesomeAdvertiserAIRSACPIHandleInstall", name);
+			SAExtensionContext.current().context().call("SuperAwesomeAdvertiserAIRSAVerifyInstall", name);
 		}
 		
 		public function nativeCallback(event:StatusEvent): void {
